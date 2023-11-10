@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+
+  mysql-container:
+    image: mysql:latest
+    restart: always
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: 'devops'
+    ports:
+      - 3306:3306
+    networks:
+      - mynetwork
+    volumes:
+      - mysql:/var/lib/mysql
+
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    container_name: phpmyadmin-container
+    ports:
+      - 8090:80
+    environment:
+      PMA_HOST: mysql-container
+    networks:
+      - mynetwork
+
+  springboot-app:
+    image: dorrahr/devopsrepository:latest
+    container_name: springboot-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/devops?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MANAGEMENT_ENDPOINTS_PROMETHEUS_ENABLED: true
+      MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED: true
+      MYSQL_HOST: mysql-container
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: achatdb
+    restart: on-failure
+    ports:
+      - 8089:8080
+    links:
+      - mysql-container
+    networks:
+      - mynetwork
+    depends_on:
+      - mysql-container
+
+networks:
+  mynetwork:
+
+volumes:
+  mysql:
