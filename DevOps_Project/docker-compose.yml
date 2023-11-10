@@ -29,7 +29,7 @@ services:
       - mynetwork
 
   springboot-app:
-    image: dorrahr/devopsrepository:latest
+    image: achrefzr/devopsrepository:latest
     container_name: springboot-app
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/devops?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
@@ -41,7 +41,7 @@ services:
       MYSQL_USER: root
       MYSQL_ROOT_PASSWORD: root
       MYSQL_PASSWORD: root
-      MYSQL_DATABASE: achatdb
+      MYSQL_DATABASE: devops
     restart: on-failure
     ports:
       - 8089:8080
